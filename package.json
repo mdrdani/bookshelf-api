@@ -17,7 +17,8 @@
     "nodemon": "^2.0.16"
   },
   "dependencies": {
-    "@hapi/hapi": "^20.2.2"
+    "@hapi/hapi": "^20.2.2",
+    "nanoid": "^3.1.22"
   },
   "prettier": {
     "singleQuote": true
