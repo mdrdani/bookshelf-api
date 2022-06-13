@@ -14,7 +14,9 @@ const createBook = (request, h) => {
   } = request.payload;
 
   const id = nanoid(16);
-  const finished = pageCount === readPage ? 'true' : 'false';
+  const selesai = true;
+  const belum = false;
+  const finished = pageCount === readPage ? selesai : belum;
   const insertedAt = new Date().toISOString();
   const updatedAt = insertedAt;
 
@@ -95,4 +97,62 @@ const detailBook = (request, h) => {
   return response;
 };
 
-module.exports = { createBook, showBook, detailBook };
+const updateBook = (request, h) => {
+  const { bookId } = request.params;
+
+  const {
+    name,
+    year,
+    author,
+    summary,
+    publisher,
+    pageCount,
+    readPage,
+    reading,
+  } = request.payload;
+
+  const updatedAt = new Date().toISOString();
+
+  const index = books.findIndex((book) => book.id === bookId);
+
+  if (index !== -1) {
+    books[index] = {
+      ...books[index],
+      name,
+      year,
+      author,
+      summary,
+      publisher,
+      pageCount,
+      readPage,
+      reading,
+      updatedAt,
+    };
+
+    const response = h.response({
+      status: 'success',
+      message: 'Buku berhasil diperbarui',
+    });
+    response.code(200);
+    return response;
+  }
+
+  const response = h.response({
+    status: 'fail',
+    message: 'Gagal memperbarui buku. Id tidak ditemukan',
+  });
+  response.code(404);
+  return response;
+};
+
+const deleteBook = (request, h) => {
+  const { bookId } = request.params;
+};
+
+module.exports = {
+  createBook,
+  showBook,
+  detailBook,
+  updateBook,
+  deleteBook,
+};
