@@ -1,3 +1,4 @@
+const { response } = require('@hapi/hapi/lib/validation');
 const { nanoid } = require('nanoid');
 const books = require('./books');
 
@@ -81,7 +82,39 @@ const createBook = (request, h) => {
 };
 
 const showBook = (request, h) => {
-  const { name } = request.query;
+  const { name, reading } = request.query;
+
+  if (reading === '0') {
+    return h.response({
+      status: 'success',
+      data: {
+        books: books
+          .filter((book) => book.reading === false)
+          .map((book) => ({
+            id: book.id,
+            name: book.name,
+            publisher: book.publisher,
+            reading: book.reading,
+          })),
+      },
+    });
+  }
+
+  if (reading === '1') {
+    return h.response({
+      status: 'success',
+      data: {
+        books: books
+          .filter((book) => book.reading === true)
+          .map((book) => ({
+            id: book.id,
+            name: book.name,
+            publisher: book.publisher,
+            reading: book.reading,
+          })),
+      },
+    });
+  }
 
   if (name !== undefined) {
     const filterBooks = [...books];
