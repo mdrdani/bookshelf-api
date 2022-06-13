@@ -18,6 +18,27 @@ const createBook = (request, h) => {
   const insertedAt = new Date().toISOString();
   const updatedAt = insertedAt;
 
+  //   jika nama tidak di isi
+  if (name === undefined) {
+    const response = h.response({
+      status: 'fail',
+      message: 'Gagal menambahkan buku. Mohon isi nama buku',
+    });
+    response.code(400);
+    return response;
+  }
+
+  //   jika halaman baca lebih besar dari jumlah halaman
+  if (readPage > pageCount) {
+    const response = h.response({
+      status: 'fail',
+      message:
+        'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount',
+    });
+    response.code(400);
+    return response;
+  }
+
   const newBook = {
     id,
     name,
@@ -36,7 +57,6 @@ const createBook = (request, h) => {
   books.push(newBook);
 
   const isSuccess = books.filter((book) => book.id === id).length > 0;
-  //   const valuePage =
 
   //   response 201 OK
   if (isSuccess) {
@@ -61,10 +81,15 @@ const createBook = (request, h) => {
 };
 
 const showBook = (request, h) => {
+  const useBook = books;
   const response = h.response({
     status: 'success',
     data: {
-      books,
+      books: useBook.map((book) => ({
+        id: book.id,
+        name: book.name,
+        publisher: book.publisher,
+      })),
     },
   });
   response.code(200);
@@ -112,6 +137,27 @@ const updateBook = (request, h) => {
   const updatedAt = new Date().toISOString();
 
   const index = books.findIndex((book) => book.id === bookId);
+
+  //   jika nama tidak di isi
+  if (name === undefined) {
+    const response = h.response({
+      status: 'fail',
+      message: 'Gagal memperbarui buku. Mohon isi nama buku',
+    });
+    response.code(400);
+    return response;
+  }
+
+  //   jika halaman baca lebih besar dari jumlah halaman
+  if (readPage > pageCount) {
+    const response = h.response({
+      status: 'fail',
+      message:
+        'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount',
+    });
+    response.code(400);
+    return response;
+  }
 
   if (index !== -1) {
     books[index] = {
