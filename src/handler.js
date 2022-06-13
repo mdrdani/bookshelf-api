@@ -60,4 +60,15 @@ const createBook = (request, h) => {
   return response;
 };
 
-module.exports = { createBook };
+const showBook = (request, h) => {
+  const response = h.response({
+    status: 'success',
+    data: {
+      books,
+    },
+  });
+  response.code(201);
+  return response;
+};
+
+module.exports = { createBook, showBook };
