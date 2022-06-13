@@ -81,19 +81,41 @@ const createBook = (request, h) => {
 };
 
 const showBook = (request, h) => {
-  const useBook = books;
-  const response = h.response({
-    status: 'success',
-    data: {
-      books: useBook.map((book) => ({
-        id: book.id,
-        name: book.name,
-        publisher: book.publisher,
-      })),
-    },
-  });
-  response.code(200);
-  return response;
+  const { name } = request.query;
+
+  if (name !== undefined) {
+    const filterBooks = [...books];
+    const filterBooksName = filterBooks.filter((book) =>
+      book.name.toLowerCase().includes(name.toLowerCase())
+    );
+    const response = h.response({
+      status: 'success',
+      data: {
+        books: filterBooksName.map((book) => ({
+          id: book.id,
+          name: book.name,
+          publisher: book.publisher,
+        })),
+      },
+    });
+    response.code(200);
+    return response;
+  }
+
+  if (name === undefined) {
+    const response = h.response({
+      status: 'success',
+      data: {
+        books: books.map((book) => ({
+          id: book.id,
+          name: book.name,
+          publisher: book.publisher,
+        })),
+      },
+    });
+    response.code(200);
+    return response;
+  }
 };
 
 const detailBook = (request, h) => {
