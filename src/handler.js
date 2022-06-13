@@ -82,8 +82,38 @@ const createBook = (request, h) => {
 };
 
 const showBook = (request, h) => {
-  const { name, reading } = request.query;
+  const { name, reading, finished } = request.query;
 
+  // parameter finished
+  if (finished === '0') {
+    return h.response({
+      status: 'success',
+      data: {
+        books: books
+          .filter((book) => book.finished === false)
+          .map((book) => ({
+            name: book.name,
+            publisher: book.publisher,
+          })),
+      },
+    });
+  }
+
+  if (finished === '1') {
+    return h.response({
+      status: 'success',
+      data: {
+        books: books
+          .filter((book) => book.finished === true)
+          .map((book) => ({
+            name: book.name,
+            publisher: book.publisher,
+          })),
+      },
+    });
+  }
+
+  // parameter reading
   if (reading === '0') {
     return h.response({
       status: 'success',
@@ -91,10 +121,8 @@ const showBook = (request, h) => {
         books: books
           .filter((book) => book.reading === false)
           .map((book) => ({
-            id: book.id,
             name: book.name,
             publisher: book.publisher,
-            reading: book.reading,
           })),
       },
     });
@@ -107,15 +135,14 @@ const showBook = (request, h) => {
         books: books
           .filter((book) => book.reading === true)
           .map((book) => ({
-            id: book.id,
             name: book.name,
             publisher: book.publisher,
-            reading: book.reading,
           })),
       },
     });
   }
 
+  // parameter name
   if (name !== undefined) {
     const filterBooks = [...books];
     const filterBooksName = filterBooks.filter((book) =>
